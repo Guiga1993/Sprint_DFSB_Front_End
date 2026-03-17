@@ -1,4 +1,9 @@
-chat/* General Styles */
+
+/* =========================
+   CSS RESET & BASE STYLES
+   ========================= */
+
+/* General body and typography */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -8,13 +13,17 @@ body {
     line-height: 1.6;
 }
 
+/* Main content area */
 main {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Header Styles */
+/* =========================
+   HEADER & BANNER STYLES
+   ========================= */
+
 header {
     background-color: #007bff;
     color: white;
@@ -39,7 +48,11 @@ header {
     object-position: center;
 }
 
-/* Section Styles */
+/* =========================
+   SECTION & CONTAINER STYLES
+   ========================= */
+
+/* Card-like container for sections */
 .container {
     background-color: #ffffff;
     margin: 20px 0;
@@ -48,6 +61,7 @@ header {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+/* Section-specific colored borders */
 #customer-section {
     border-left: 5px solid #28a745;
 }
@@ -60,6 +74,7 @@ header {
     border-left: 5px solid #6f42c1;
 }
 
+/* Section titles and icons */
 .section-title {
     color: #007bff;
     font-size: 1.8em;
@@ -72,11 +87,16 @@ header {
     margin-right: 10px;
 }
 
-/* Form Styles */
+/* =========================
+   FORM STYLES
+   ========================= */
+
+/* Form container spacing */
 .formTableContainer {
     margin-bottom: 20px;
 }
 
+/* Table layout for forms */
 .formTable {
     width: 100%;
     border-collapse: collapse;
@@ -87,6 +107,7 @@ header {
     vertical-align: top;
 }
 
+/* Form labels and inputs */
 .form-label {
     font-weight: bold;
     color: #555;
@@ -100,6 +121,7 @@ header {
     font-size: 1em;
 }
 
+/* Read-only input styling */
 .form-input[readonly] {
     background-color: #eef4ff;
     color: #24446b;
@@ -107,22 +129,30 @@ header {
     cursor: not-allowed;
 }
 
+/* Focus state for inputs */
 .form-input:focus, .form-select:focus {
     border-color: #007bff;
     outline: none;
 }
 
+/* Error state for inputs */
 .input-error {
     border-color: #dc3545 !important;
     background-color: #fff5f5;
 }
 
+/* Error message text */
 .error-message {
     color: #dc3545;
     font-size: 0.85em;
     margin-top: 4px;
 }
 
+/* =========================
+   BUTTON STYLES
+   ========================= */
+
+/* Primary action button */
 .btn-primary {
     background-color: #28a745;
     color: white;
@@ -137,6 +167,7 @@ header {
     background-color: #218838;
 }
 
+/* Secondary action button */
 .btn-secondary {
     background-color: #6c757d;
     color: white;
@@ -152,7 +183,11 @@ header {
     background-color: #5a6268;
 }
 
-/* Table Styles */
+/* =========================
+   TABLE STYLES
+   ========================= */
+
+/* Data table layout */
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -165,25 +200,33 @@ header {
     text-align: left;
 }
 
+/* Table header styling */
 .data-table th {
     background-color: #007bff;
     color: white;
 }
 
+/* Zebra striping for rows */
 .data-table tbody tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
+/* Row hover effect */
 .data-table tbody tr:hover {
     background-color: #e9ecef;
 }
 
+/* Action column width */
 .action-column {
     width: 50px;
     text-align: center;
 }
 
-/* Divider Styles */
+/* =========================
+   DIVIDER & UTILITY STYLES
+   ========================= */
+
+/* Section divider line */
 .section-divider {
     border: none;
     height: 2px;
@@ -191,21 +234,28 @@ header {
     margin: 40px 0;
 }
 
-/* Responsive Design */
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+
 @media (max-width: 768px) {
+    /* Reduce container padding on small screens */
     .container {
         padding: 10px;
     }
 
+    /* Smaller section titles */
     .section-title {
         font-size: 1.5em;
     }
 
+    /* Stack form table cells vertically */
     .formTable td {
         display: block;
         width: 100%;
     }
 
+    /* Add spacing between stacked inputs */
     .form-input, .form-select {
         margin-bottom: 10px;
     }
