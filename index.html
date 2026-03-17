@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+    <title>Gestão de Geradores de Hidrogênio</title>
+
+        <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div class="title">
+            <h1>Sistema de Gerenciamento de Geradores de Hidrogênio</h1>
+        </div>
+        <div class="banner">
+            <img src="img/hydrogen_generator.jpg" alt="hydrogen-station-scaled" class="banner-image">
+        </div>
+    </header>
+
+    <main>
+        <section class="container" id="customer-section">
+            <h2 class="section-title"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" width="25px" class="icon"> Cadastro de Clientes</h2>
+
+            <div class="newItem formTableContainer">
+                <form id="customerForm">
+                    <table class="formTable">
+                        <tr>
+                            <td><label for="custName" class="form-label">Nome/Empresa:</label></td>
+                            <td><input type="text" id="custName" class="form-input" placeholder="Ex: AeroHidro SA"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="custEmail" class="form-label">E-mail:</label></td>
+                            <td><input type="email" id="custEmail" class="form-input" placeholder="Ex: contato@email.com"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="custTaxId" class="form-label">Tax ID (CNPJ/CPF):</label></td>
+                            <td><input type="text" id="custTaxId" class="form-input" placeholder="Ex: 000-00-0000"></td>
+                        </tr>
+                        <tr>
+                            <td></td> <td><button type="button" onclick="newCustomer()" class="addBtn btn-primary">Cadastrar Cliente</button> <button type="reset" class="btn-secondary">Reset Fields</button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+            <div class="formTableContainer">
+                <table class="formTable">
+                    <tr>
+                        <td><label for="searchCustomerId" class="form-label">Buscar Cliente por ID:</label></td>
+                        <td><input type="number" min="1" step="1" id="searchCustomerId" class="form-input" placeholder="Ex: 1"></td>
+                        <td><button type="button" onclick="searchCustomerRecord()" class="btn-primary">Buscar</button></td>
+                        <td><button type="button" onclick="getCustomers()" class="btn-secondary">Listar Todos</button></td>
+                        <td><button type="button" onclick="clearTableRows('customerTable')" class="btn-secondary">Limpar Tabela</button></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="items">
+                <table id="customerTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Tax ID</th>
+                            <th class="action-column"><img src="https://cdn-icons-png.flaticon.com/512/126/126468.png" width="15px" class="icon"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <section class="container" id="generator-section">
+            <h2 class="section-title"><img src="https://cdn-icons-png.flaticon.com/512/2906/2906231.png" width="25px" class="icon">Cadastro de Geradores de Hidrogênio</h2>
+
+            <div class="newItem formTableContainer">
+                <form id="generatorForm">
+                    <table class="formTable">
+                        <tr>
+                            <td><label for="newSerial" class="form-label">Nº de Série:</label></td>
+                            <td><input type="text" id="newSerial" class="form-input" placeholder="Ex: GEN-0001" pattern="GEN-[0-9]{4}" maxlength="50" title="Formato: GEN-0000 (ex: GEN-0001)"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="newAcquisition" class="form-label">Tipo de Aquisição:</label></td>
+                            <td>
+                                <select id="newAcquisition" class="form-select">
+                                    <option value="" disabled selected>Selecione o tipo...</option>
+                                    <option value="Leasing">Leasing</option>
+                                    <option value="Renting">Renting</option>
+                                    <option value="Direct Sales">Venda Direta (Direct Sales)</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="newGenType" class="form-label">Tipo (ex: PEMFC):</label></td>
+                                <td>
+                                    <select id="newGenType" class="form-select">
+                                        <option value="" disabled selected>Selecione o tipo...</option>
+                                        <option value="PEMFC">PEMFC</option>
+                                        <option value="Alcaline">Alcaline</option>
+                                        <option value="SOFC">SOFC (Solid Oxide)</option>
+                                        <option value="AEMFC">AEMFC (Anion Exchange)</option>
+                                        <option value="Other/Personalized">Outro/Personalizado</option>
+                                    </select>
+                                </td>
+                        </tr>
+                        <tr>
+                            <td><label for="newCells" class="form-label">Qtd Células:</label></td>
+                            <td><input type="number" min="1" step="1" id="newCells" class="form-input" placeholder="Ex: 10"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="newVoltage" class="form-label">Stack (Voltage (V):</label></td>
+                            <td><input type="number" min="0" step="0.01" id="newVoltage" class="form-input" placeholder="Ex: 12.50"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="newCurrent" class="form-label">Densidade Corrente (A/cm2):</label></td>
+                            <td><input type="number" min="0" step="0.01" id="newCurrent" class="form-input" placeholder="Ex: 0.5"></td>
+                        </tr>
+                        <tr>
+                            <td></td> <td><button type="button" onclick="newGenerator()" class="addBtn btn-primary">Cadastrar Gerador</button> <button type="reset" class="btn-secondary">Reset Fields</button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+            <div class="formTableContainer">
+                <table class="formTable">
+                    <tr>
+                        <td><label for="searchGeneratorSerial" class="form-label">Buscar Gerador por Nº de Série:</label></td>
+                        <td><input type="text" id="searchGeneratorSerial" class="form-input" placeholder="Ex: GEN-0001"></td>
+                        <td><button type="button" onclick="searchGeneratorRecord()" class="btn-primary">Buscar</button></td>
+                        <td><button type="button" onclick="getGenerators()" class="btn-secondary">Listar Todos</button></td>
+                        <td><button type="button" onclick="clearTableRows('generatorTable')" class="btn-secondary">Limpar Tabela</button></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="items">
+                <table id="generatorTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID do Gerador</th>
+                            <th>Nº Série</th>
+                            <th>Tipo</th>
+                            <th>Células</th>
+                            <th>V Total</th>
+                            <th>V/Célula</th> <th class="action-column"><img src="https://cdn-icons-png.flaticon.com/512/126/126468.png" width="15px" class="icon"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <section class="container" id="customer-generators-section">
+            <h2 class="section-title"><img src="https://cdn-icons-png.flaticon.com/512/2905/2905806.png" width="25px" class="icon">Relação de Clientes e Geradores</h2>
+
+            <div class="newItem formTableContainer">
+                <form id="customerGeneratorForm">
+                    <table class="formTable">
+                        <tr>
+                            <td><label for="cgCustomerId" class="form-label">ID do Cliente:</label></td>
+                            <td><input type="number" min="1" step="1" id="cgCustomerId" class="form-input" placeholder="Ex: 1"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="cgGeneratorId" class="form-label">ID do Gerador:</label></td>
+                            <td><input type="number" min="1" step="1" id="cgGeneratorId" class="form-input" placeholder="Ex: 1"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="cgGeneratorQtd" class="form-label">Qtd. Geradores:</label></td>
+                            <td><input type="number" min="1" step="1" id="cgGeneratorQtd" class="form-input" placeholder="Ex: 1" value="1"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="cgInstallationDate" class="form-label">Data de Instalação:</label></td>
+                            <td><input type="date" id="cgInstallationDate" class="form-input"></td>
+                        </tr>
+                        <tr>
+                            <td></td> <td><button type="button" onclick="newCustomerGenerator()" class="addBtn btn-primary">Vincular</button> <button type="reset" class="btn-secondary">Reset Fields</button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+            <div class="formTableContainer">
+                <table class="formTable">
+                    <tr>
+                        <td><label for="searchAssetId" class="form-label">Buscar Vínculo por ID:</label></td>
+                        <td><input type="number" min="1" step="1" id="searchAssetId" class="form-input" placeholder="Ex: 1"></td>
+                        <td><button type="button" onclick="searchAssetRecord()" class="btn-primary">Buscar</button></td>
+                        <td><button type="button" onclick="getAssets()" class="btn-secondary">Listar Todos</button></td>
+                        <td><button type="button" onclick="clearTableRows('customerGeneratorTable')" class="btn-secondary">Limpar Tabela</button></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="items">
+                <table id="customerGeneratorTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID Vínculo</th>
+                            <th>ID Cliente</th>
+                            <th>ID Gerador</th>
+                            <th>Qtd. Geradores</th>
+                            <th>Data de Instalação</th>
+                            <th class="action-column"><img src="https://cdn-icons-png.flaticon.com/512/126/126468.png" width="15px" class="icon"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+        <script src="scripts.js"></script>
+
+</body>
+</html>
