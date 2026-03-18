@@ -1,10 +1,11 @@
+
+
 /*
   =====================================================================================
   API Base URL
   =====================================================================================
 */
 const API_BASE = 'http://127.0.0.1:5000';
-
 
 /*
   Extracts the error message from the API response.
@@ -53,10 +54,50 @@ const extractRawDetail = (data) => {
 
 
 /*
-  =====================================================================================
-  Initialization — load all data when the page opens
-  =====================================================================================
+  Clears all rows from the tbody of a table by its ID.
+  Used by the 'Limpar Tabela' buttons for all tables and before reloading data.
+  This prevents duplicate rows and ensures the table always shows fresh data.
+  @param {string} tableId - The id attribute of the table to clear.
 */
+function clearTableRows(tableId) {
+  const table = document.getElementById(tableId);
+  if (!table) return; // Table not found
+  const tbody = table.getElementsByTagName('tbody')[0];
+  if (!tbody) return; // Tbody not found
+  while (tbody.rows.length > 0) {
+    tbody.deleteRow(0); // Remove each row from the top
+  }
+}
+
+const CUSTOMER_FIELDS = ['custName', 'custEmail', 'custTaxId'];
+const CUSTOMER_FIELD_MAP = {
+  name: 'custName',
+  email: 'custEmail',
+  tx_id: 'custTaxId',
+};
+
+const GENERATOR_FIELDS = ['newSerial', 'newAcquisition', 'newGenType', 'newCells', 'newVoltage', 'newCurrent'];
+const GENERATOR_FIELD_MAP = {
+  serial_number: 'newSerial',
+  acquisition_type: 'newAcquisition',
+  stack_type: 'newGenType',
+  number_of_cells: 'newCells',
+  stack_voltage: 'newVoltage',
+  current_density: 'newCurrent',
+};
+const SERIAL_NUMBER_REGEX = /^GEN-\d{4}$/;
+
+const ASSET_FIELDS = ['cgCustomerId', 'cgGeneratorId', 'cgGeneratorQtd', 'cgInstallationDate'];
+const ASSET_FIELD_MAP = {
+  customer_id: 'cgCustomerId',
+  generator_id: 'cgGeneratorId',
+  generator_qtd: 'cgGeneratorQtd',
+  installation_date: 'cgInstallationDate',
+};
+
+// =====================================================================================
+// Initialization — load all data when the page opens
+// =====================================================================================
 window.addEventListener('load', () => {
   getCustomers();
   getGenerators();
@@ -64,12 +105,12 @@ window.addEventListener('load', () => {
 });
 
 
-/*
-  --------------------------------------------------------------------------------------
-  Fetch customer list from the server via GET
-  --------------------------------------------------------------------------------------
-*/
+
+// Fetch customer list from the server via GET
 const getCustomers = async () => {
+  // Clear the customer table before loading new data to avoid duplicates
+  clearTableRows('customerTable');
+  // Fetch all customers from the backend and insert them into the table
   fetch(`${API_BASE}/customers`)
     .then((response) => response.json())
     .then((data) => {
@@ -83,12 +124,12 @@ const getCustomers = async () => {
 }
 
 
-/*
-  --------------------------------------------------------------------------------------
-  Fetch generator list from the server via GET
-  --------------------------------------------------------------------------------------
-*/
+
+// Fetch generator list from the server via GET
 const getGenerators = async () => {
+  // Clear the generator table before loading new data to avoid duplicates
+  clearTableRows('generatorTable');
+  // Fetch all hydrogen generators from the backend and insert them into the table
   fetch(`${API_BASE}/hydrogen-generators`)
     .then((response) => response.json())
     .then((data) => {
@@ -109,12 +150,12 @@ const getGenerators = async () => {
 }
 
 
-/*
-  --------------------------------------------------------------------------------------
-  Fetch asset-link list from the server via GET
-  --------------------------------------------------------------------------------------
-*/
+
+// Fetch asset-link list from the server via GET
 const getAssets = async () => {
+  // Clear the asset (customer-generator link) table before loading new data to avoid duplicates
+  clearTableRows('customerGeneratorTable');
+  // Fetch all asset links from the backend and insert them into the table
   fetch(`${API_BASE}/assets`)
     .then((response) => response.json())
     .then((data) => {
@@ -146,16 +187,26 @@ const getCustomerById = async (customerId) => {
     .catch((error) => {
       console.error('Error:', error);
       return null;
+
+    // =============================
+    // 4. UI update functions (insert row, etc.)
+    // =============================
+    // ...existing code for insertCustomer, insertGenerator, insertAsset, etc...
+
+    // =============================
+    // 5. Form handling and validation functions
+    // =============================
+    // ...existing code for newCustomer, validateCustomerFields, etc...
+
+    // =============================
+    // 6. Event listeners and initialization
+    // =============================
+    // Load all data when the page opens
+    window.addEventListener('load', () => {
+      getCustomers();
+      getGenerators();
+      getAssets();
     });
-}
-
-
-/*
-  Fetch a single generator by serial via GET /hydrogen-generator.
-*/
-const getGeneratorBySerial = async (serialNumber) => {
-  return fetch(`${API_BASE}/hydrogen-generator?serial_number=${encodeURIComponent(serialNumber)}`)
-    .then(async (response) => {
       if (!response.ok) return null;
       return response.json();
     })
