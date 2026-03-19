@@ -1,9 +1,11 @@
-/*
-  =====================================================================================
-  API Base URL
-  =====================================================================================
-*/
+// ===============================
+// Constants & Utility Functions
+// ===============================
+
+// API base URL
+// The base URL for all API requests
 const API_BASE = 'http://127.0.0.1:5000';
+
 
 // clearTableRows: Removes all rows from the tbody of a table by its ID
 function clearTableRows(tableId) {
@@ -68,11 +70,110 @@ const extractRawDetail = (data) => {
 }
 
 
-/*
-  =====================================================================================
-  Initialization — load all data when the page opens
-  =====================================================================================
-*/
+// searchCustomerRecord: Searches and displays a customer by ID (used by the Buscar button)
+function searchCustomerRecord() {
+  // Get the input element for customer ID
+  const idInput = document.getElementById('searchCustomerId');
+  // Parse the input value as an integer, or null if not present
+  const customerId = idInput && idInput.value ? parseInt(idInput.value, 10) : null;
+  // Clear the customer table before displaying results
+  clearTableRows('customerTable');
+  // If the ID is invalid, show an alert and stop
+  if (!customerId || customerId <= 0) {
+    alert('Informe um ID de cliente válido para buscar.');
+    return;
+  }
+  // Fetch the customer by ID from the backend
+  getCustomerById(customerId).then(data => {
+    // If a customer is found, insert it into the table
+    if (data && data.customer_id) {
+      insertCustomer(data.customer_id, data.name, data.email, data.tx_id);
+    } else {
+      // If not found, show an alert
+      alert('Cliente não encontrado.');
+    }
+  }).catch(() => {
+    // If an error occurs, show an alert
+    alert('Erro ao buscar cliente.');
+  });
+}
+
+// searchGeneratorRecord: Searches and displays a generator by serial number (used by the Buscar button)
+function searchGeneratorRecord() {
+  // Get the input element for generator serial number
+  const serialInput = document.getElementById('searchGeneratorSerial');
+  // Get the serial value, trim and convert to uppercase
+  const serial = serialInput && serialInput.value ? serialInput.value.trim().toUpperCase() : null;
+  // Clear the generator table before displaying results
+  clearTableRows('generatorTable');
+  // If the serial is invalid, show an alert and stop
+  if (!serial) {
+    alert('Informe um nº de série válido para buscar.');
+    return;
+  }
+  // Fetch the generator by serial from the backend
+  getGeneratorBySerial(serial).then(data => {
+    // If a generator is found, insert it into the table
+    if (data && data.generator_id) {
+      insertGenerator(
+        data.generator_id,
+        data.serial_number,
+        data.acquisition_type,
+        data.stack_type,
+        data.number_of_cells,
+        data.stack_voltage,
+        data.current_density,
+        (data.stack_voltage / data.number_of_cells).toFixed(2)
+      );
+    } else {
+      // If not found, show an alert
+      alert('Gerador não encontrado.');
+    }
+  }).catch(() => {
+    // If an error occurs, show an alert
+    alert('Erro ao buscar gerador.');
+  });
+}
+
+// searchAssetRecord: Searches and displays a customer-generator link (vínculo) by asset ID (used by the Buscar button)
+function searchAssetRecord() {
+  // Get the input element for asset ID
+  const assetInput = document.getElementById('searchAssetId');
+  // Parse the input value as an integer, or null if not present
+  const assetId = assetInput && assetInput.value ? parseInt(assetInput.value, 10) : null;
+  // Clear the asset table before displaying results
+  clearTableRows('customerGeneratorTable');
+  // If the asset ID is invalid, show an alert and stop
+  if (!assetId || assetId <= 0) {
+    alert('Informe um ID de vínculo válido para buscar.');
+    return;
+  }
+  // Fetch the asset by ID from the backend
+  getAssetById(assetId).then(data => {
+    // If an asset is found, insert it into the table
+    if (data && data.asset_id) {
+      insertAsset(
+        data.asset_id,
+        data.customer_id,
+        data.generator_id,
+        data.generator_qtd,
+        data.installation_date
+      );
+    } else {
+      // If not found, show an alert
+      alert('Vínculo não encontrado.');
+    }
+  }).catch(() => {
+    // If an error occurs, show an alert
+    alert('Erro ao buscar vínculo.');
+  });
+}
+
+// ===============================
+// Initialization (Page Load)
+// ===============================
+
+// When the page loads, fetch and display all customers, generators, and assets
 window.addEventListener('load', () => {
   // Fetch and display all customers
   getCustomers();
@@ -85,10 +186,13 @@ window.addEventListener('load', () => {
 
 /*
   --------------------------------------------------------------------------------------
-  Fetch customer list from the server via GET
+  getCustomers: Fetch customer list from the server via GET
   --------------------------------------------------------------------------------------
 */
 const getCustomers = async () => {
+  // Clear the customer table before loading new data
+  document.getElementById('customerTable').getElementsByTagName('tbody')[0].innerHTML = '';
+  // Fetch the list of customers from the API
   fetch(`${API_BASE}/customers`)
     .then((response) => response.json()) // Parse the response as JSON
     .then((data) => {
@@ -106,10 +210,13 @@ const getCustomers = async () => {
 
 /*
   --------------------------------------------------------------------------------------
-  Fetch generator list from the server via GET
+  getGenerators: Fetch generator list from the server via GET
   --------------------------------------------------------------------------------------
 */
 const getGenerators = async () => {
+  // Clear the generator table before loading new data
+  clearTableRows('generatorTable');
+  // Fetch the list of generators from the API
   fetch(`${API_BASE}/hydrogen-generators`)
     .then((response) => response.json()) // Parse the response as JSON
     .then((data) => {
@@ -136,10 +243,13 @@ const getGenerators = async () => {
 
 /*
   --------------------------------------------------------------------------------------
-  Fetch asset-link list from the server via GET
+  getAssets: Fetch asset-link list from the server via GET
   --------------------------------------------------------------------------------------
 */
 const getAssets = async () => {
+  // Clear the asset-link table before loading new data
+  clearTableRows('customerGeneratorTable');
+  // Fetch the list of asset links from the API
   fetch(`${API_BASE}/assets`)
     .then((response) => response.json()) // Parse the response as JSON
     .then((data) => {
@@ -182,11 +292,13 @@ const getCustomerById = async (customerId) => {
 
 
 /*
-  Fetch a single generator by serial via GET /hydrogen-generator.
+  getGeneratorBySerial: Fetch a single generator by serial via GET /hydrogen-generator.
 */
 const getGeneratorBySerial = async (serialNumber) => {
+  // Send a GET request to fetch a generator by serial number
   return fetch(`${API_BASE}/hydrogen-generator?serial_number=${encodeURIComponent(serialNumber)}`)
     .then(async (response) => {
+      // If the response is not OK, return null
       if (!response.ok) return null;
       // Parse and return the response as JSON
       return response.json();
