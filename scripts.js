@@ -575,6 +575,7 @@ const insertCustomer = (id, name, email, txId) => {
   const deleteBtn = document.createElement('button');
   deleteBtn.textContent = '✕';
   deleteBtn.className = 'delete-btn';
+  deleteBtn.title = 'Click to delete the item from database';
   // Set the click handler for the delete button
   deleteBtn.onclick = async () => {
     // Confirm before deleting
@@ -622,6 +623,7 @@ const insertGenerator = (id, serial, acquisitionType, stackType, cells, voltage,
   const deleteBtn = document.createElement('button');
   deleteBtn.textContent = '✕';
   deleteBtn.className = 'delete-btn';
+  deleteBtn.title = 'Click to delete the item from database';
   // Set the click handler for the delete button
   deleteBtn.onclick = async () => {
     // Confirm before deleting
@@ -669,6 +671,7 @@ const insertAsset = (assetId, customerId, generatorId, generatorQtd, installatio
   const deleteBtn = document.createElement('button');
   deleteBtn.textContent = '✕';
   deleteBtn.className = 'delete-btn';
+  deleteBtn.title = 'Click to delete the item from database';
   // Set the click handler for the delete button
   deleteBtn.onclick = async () => {
     // Confirm before deleting
